@@ -1,0 +1,74 @@
+<html>
+<head>
+<title>CameraPreview.java</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<style type="text/css">
+.ln { color: rgb(0,0,0); font-weight: normal; font-style: normal; }
+.s0 { color: rgb(204,120,50); }
+.s1 { color: rgb(169,183,198); }
+.s2 { color: rgb(98,151,85); }
+</style>
+</head>
+<BODY BGCOLOR="#2b2b2b">
+<TABLE CELLSPACING=0 CELLPADDING=5 COLS=1 WIDTH="100%" BGCOLOR="#C0C0C0" >
+<TR><TD><CENTER>
+<FONT FACE="Arial, Helvetica" COLOR="#000000">
+CameraPreview.java</FONT>
+</center></TD></TR></TABLE>
+<pre>
+
+<a name="l1"><span class="ln">1    </span></a><span class="s0">package </span><span class="s1">dashcam.zena.dashcam</span><span class="s0">;</span><span class="s1"> 
+<a name="l2"><span class="ln">2    </span></a></span><span class="s0">import </span><span class="s1">android.app.Activity</span><span class="s0">;</span><span class="s1"> 
+<a name="l3"><span class="ln">3    </span></a></span><span class="s0">import </span><span class="s1">android.content.Context</span><span class="s0">;</span><span class="s1"> 
+<a name="l4"><span class="ln">4    </span></a></span><span class="s0">import </span><span class="s1">android.hardware.Camera</span><span class="s0">;</span><span class="s1"> 
+<a name="l5"><span class="ln">5    </span></a></span><span class="s0">import </span><span class="s1">android.util.Log</span><span class="s0">;</span><span class="s1"> 
+<a name="l6"><span class="ln">6    </span></a></span><span class="s0">import </span><span class="s1">android.view.Surface</span><span class="s0">;</span><span class="s1"> 
+<a name="l7"><span class="ln">7    </span></a></span><span class="s0">import </span><span class="s1">android.view.SurfaceHolder</span><span class="s0">;</span><span class="s1"> 
+<a name="l8"><span class="ln">8    </span></a></span><span class="s0">import </span><span class="s1">android.view.SurfaceView</span><span class="s0">;</span><span class="s1"> 
+<a name="l9"><span class="ln">9    </span></a></span><span class="s0">import </span><span class="s1">android.widget.RemoteViews</span><span class="s0">;</span><span class="s1"> 
+<a name="l10"><span class="ln">10   </span></a></span><span class="s0">import </span><span class="s1">android.widget.RemoteViewsService</span><span class="s0">;</span><span class="s1"> 
+<a name="l11"><span class="ln">11   </span></a></span><span class="s0">import </span><span class="s1">android.widget.Toast</span><span class="s0">;</span><span class="s1"> 
+<a name="l12"><span class="ln">12   </span></a> 
+<a name="l13"><span class="ln">13   </span></a></span><span class="s0">import </span><span class="s1">java.lang.annotation.Annotation</span><span class="s0">;</span><span class="s1"> 
+<a name="l14"><span class="ln">14   </span></a> 
+<a name="l15"><span class="ln">15   </span></a></span><span class="s2">/** 
+<a name="l16"><span class="ln">16   </span></a> * Created by Zena on 12/26/2014. 
+<a name="l17"><span class="ln">17   </span></a> */</span><span class="s1"> 
+<a name="l18"><span class="ln">18   </span></a></span><span class="s0">public class </span><span class="s1">CameraPreview </span><span class="s0">extends </span><span class="s1">SurfaceView </span><span class="s0">implements </span><span class="s1">SurfaceHolder.Callback{ 
+<a name="l19"><span class="ln">19   </span></a> 
+<a name="l20"><span class="ln">20   </span></a>    </span><span class="s0">private static </span><span class="s1">SurfaceHolder mainHolder</span><span class="s0">;</span><span class="s1"> 
+<a name="l21"><span class="ln">21   </span></a>    </span><span class="s0">private static </span><span class="s1">DashCamera camera</span><span class="s0">;</span><span class="s1"> 
+<a name="l22"><span class="ln">22   </span></a>    </span><span class="s0">private static </span><span class="s1">Surface previewSurface</span><span class="s0">;</span><span class="s1"> 
+<a name="l23"><span class="ln">23   </span></a> 
+<a name="l24"><span class="ln">24   </span></a>    </span><span class="s0">public </span><span class="s1">CameraPreview(Activity inContext</span><span class="s0">, </span><span class="s1">DashCamera inCamera){ 
+<a name="l25"><span class="ln">25   </span></a>        </span><span class="s0">super</span><span class="s1">(inContext)</span><span class="s0">;</span><span class="s1"> 
+<a name="l26"><span class="ln">26   </span></a>        camera = inCamera</span><span class="s0">;</span><span class="s1"> 
+<a name="l27"><span class="ln">27   </span></a>        mainHolder = getHolder()</span><span class="s0">;</span><span class="s1"> 
+<a name="l28"><span class="ln">28   </span></a>        mainHolder.addCallback(</span><span class="s0">this</span><span class="s1">)</span><span class="s0">;</span><span class="s1"> 
+<a name="l29"><span class="ln">29   </span></a>        mainHolder.setType(SurfaceHolder.SURFACE_TYPE_PUSH_BUFFERS)</span><span class="s0">;</span><span class="s1"> 
+<a name="l30"><span class="ln">30   </span></a>        previewSurface = mainHolder.getSurface()</span><span class="s0">;</span><span class="s1"> 
+<a name="l31"><span class="ln">31   </span></a>    } 
+<a name="l32"><span class="ln">32   </span></a> 
+<a name="l33"><span class="ln">33   </span></a>    </span><span class="s0">public static </span><span class="s1">SurfaceHolder holder(){ 
+<a name="l34"><span class="ln">34   </span></a>        </span><span class="s0">return </span><span class="s1">mainHolder</span><span class="s0">;</span><span class="s1"> 
+<a name="l35"><span class="ln">35   </span></a>    } 
+<a name="l36"><span class="ln">36   </span></a>    </span><span class="s0">public static </span><span class="s1">Surface getSurface(){</span><span class="s0">return </span><span class="s1">previewSurface</span><span class="s0">;</span><span class="s1">} 
+<a name="l37"><span class="ln">37   </span></a> 
+<a name="l38"><span class="ln">38   </span></a>    @Override 
+<a name="l39"><span class="ln">39   </span></a>    </span><span class="s0">public void </span><span class="s1">surfaceCreated(SurfaceHolder holder) { 
+<a name="l40"><span class="ln">40   </span></a>        camera.setPreviewHolder(holder)</span><span class="s0">;</span><span class="s1"> 
+<a name="l41"><span class="ln">41   </span></a>    } 
+<a name="l42"><span class="ln">42   </span></a> 
+<a name="l43"><span class="ln">43   </span></a>    @Override 
+<a name="l44"><span class="ln">44   </span></a>    </span><span class="s0">public void </span><span class="s1">surfaceChanged(SurfaceHolder holder</span><span class="s0">, int </span><span class="s1">format</span><span class="s0">, int </span><span class="s1">width</span><span class="s0">, int </span><span class="s1">height) { 
+<a name="l45"><span class="ln">45   </span></a> 
+<a name="l46"><span class="ln">46   </span></a>    } 
+<a name="l47"><span class="ln">47   </span></a> 
+<a name="l48"><span class="ln">48   </span></a>    @Override 
+<a name="l49"><span class="ln">49   </span></a>    </span><span class="s0">public void </span><span class="s1">surfaceDestroyed(SurfaceHolder holder) { 
+<a name="l50"><span class="ln">50   </span></a>    } 
+<a name="l51"><span class="ln">51   </span></a> 
+<a name="l52"><span class="ln">52   </span></a>} 
+<a name="l53"><span class="ln">53   </span></a></span></pre>
+</body>
+</html>
